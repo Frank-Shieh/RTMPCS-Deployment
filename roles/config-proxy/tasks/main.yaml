@@ -1,0 +1,11 @@
+- name: config http_proxy
+  shell: echo 'http_proxy="http://wwwproxy.unimelb.edu.au:8000"' | sudo tee -a /etc/environment
+  become_method: sudo
+
+- name: config https_proxy
+  shell: echo 'https_proxy="http://wwwproxy.unimelb.edu.au:8000"' | sudo tee -a /etc/environment
+  become_method: sudo
+
+- name: config ftp_proxy
+  shell: echo 'ftp_proxy="http://wwwproxy.unimelb.edu.au:8000"' | sudo tee -a /etc/environment
+  become_method: sudo

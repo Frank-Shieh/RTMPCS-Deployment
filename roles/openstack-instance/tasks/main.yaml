@@ -1,0 +1,14 @@
+#create an instance on nectar
+- include_tasks: create.yml
+  with_items: '{{os_vol_ids}}'
+  loop_control:
+    loop_var: vol
+
+- name: record ip address
+  set_fact:
+    ips: '{{ips|default([])+ [item]}}'
+  loop: '{{ip_addresses}}'
+
+
+
+  

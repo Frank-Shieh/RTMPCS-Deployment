@@ -1,0 +1,8 @@
+- name: create a directory named data
+  shell: sudo mkdir /data
+
+- name: format the volume
+  shell: sudo mkfs.ext4 /dev/vdb
+
+- name: mount data to /data
+  shell: sudo mount -t auto /dev/vdb /data

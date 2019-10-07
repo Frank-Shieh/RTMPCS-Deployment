@@ -1,0 +1,54 @@
+- hosts: localhost
+  vars_files:
+    - host_vars/nectar.yaml
+  gather_facts: true
+
+  roles:
+    - role: openstack-common
+    - role: openstack-volume
+    - role: openstack-security-group
+    - role: openstack-instance
+  tasks:
+    - name: set manager
+      set_fact:
+        manager: "{{ips[0]}}"
+    - name: set facts
+      set_fact:
+        ips: "{{ips}}"
+
+    - pause: seconds=120
+
+    - name: remove ssh key cache of VMs
+      shell: ssh-keygen -R {{item}}
+      loop: '{{ips}}'
+    
+- hosts: servers
+  gather_facts: true
+  remote_user: ubuntu
+  become: yes
+  roles:
+    - role: config-proxy
+    - role: install-docker
+    - role: mount-volume
+
+# - hosts: servers[0]
+#   gather_facts: true
+#   remote_user: ubuntu
+#   become: yes
+#   roles:
+#     - role: deploy-cluster-manager
+
+# - hosts: servers[1]:servers[2]:servers[3]
+#   gather_facts: no
+#   remote_user: ubuntu
+#   become: yes
+#   roles:
+#     - role: deploy-cluster-workers
+
+# - hosts: servers[0]
+#   gather_facts: true
+#   remote_user: ubuntu
+#   become: yes
+#   roles:
+#     - role: deploy-load-balancer
+

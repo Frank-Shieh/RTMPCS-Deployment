@@ -1,0 +1,31 @@
+#create an instance on nectar
+- name: "create an instance"
+  os_server:
+    name: '{{vol}}'
+    image: '{{instance_image}}'
+    key_name: '{{instance_key_name}}'
+    availability_zone: '{{availability_zone}}'
+    timeout: 600
+    flavor: '{{instance_flavor}}'
+    volumes: '{{vol}}'
+    network: '{{instance_network}}'
+    auto_floating_ip: yes
+    security_groups: '{{sg_names}}'
+  become_method: sudo  
+  register: os_instance
+
+- debug:
+    msg: '{{os_instance.openstack.accessIPv4}}'
+
+- name: create a list of ip address
+  set_fact:
+    ip_addresses: '{{ip_addresses|default([])+ [os_instance.openstack.accessIPv4]}}'
+
+- name: add host to groups
+  add_host:
+    hostname: "{{os_instance.openstack.accessIPv4}}"
+    groups: servers
+
+  
+
+  
